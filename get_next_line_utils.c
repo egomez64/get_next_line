@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *s)
+/*int	ft_strlen(const char *s)
 {
 	int	i;
 
@@ -20,6 +20,20 @@ int	ft_strlen(const char *s)
 	while (s[i] != '\0')
 		i++;
 	return (i);
+}*/
+
+void	free_result(struct s_stack *result)
+{
+	if (result->stock)
+	{
+		free (result->stock);
+		result->stock = 0;
+	}
+	if (result->buff)
+	{
+		free (result->buff);
+		result->buff = 0;
+	}
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -40,11 +54,15 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	size_t	i;
 	size_t	j;
 	size_t	x;
+	int		y;
 
-	if (size == 0)
-		return (ft_strlen(src) + size);
 	x = 0;
 	i = 0;
+	y = 0;
+	while (src[y] != '\0')
+		y++;
+	if (size == 0)
+		return (y + size);
 	while (src[x] != '\0')
 		x++;
 	while (dst[i] != '\0' && i < size)
@@ -67,7 +85,9 @@ char	*ft_strdup(const char *src)
 	int		i;
 
 	i = 0;
-	size = ft_strlen(src) + 1;
+	size = 0;
+	while (src[size] != '\0')
+		size++;
 	copy = malloc(sizeof(char) * size + 1);
 	if (copy == NULL)
 		return (NULL);
@@ -80,11 +100,14 @@ char	*ft_strdup(const char *src)
 	return (copy);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
-	int		tot_size;
+	int		y;
 	char	*newchain;
+	int		i;
 
+	i = 0;
+	y = 0;
 	if (!s2)
 		return (NULL);
 	if (!s1)
@@ -92,13 +115,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		newchain = ft_strdup(s2);
 		return (newchain);
 	}
-	tot_size = ft_strlen(s1) + ft_strlen(s2) + 1;
-	if (tot_size == 0)
-		return (NULL);
-	newchain = malloc(sizeof(char) * tot_size + 1);
+	while (s1[i] != '\0')
+		i++;
+	while (s2[y] != '\0')
+		y++;
+	newchain = malloc(sizeof(char) * (i + y + 2));
 	if (newchain == NULL)
 		return (NULL);
-	ft_strlcat(newchain, s1, tot_size);
-	ft_strlcat(newchain, s2, tot_size);
+	newchain[0] = 0;
+	ft_strlcat(newchain, s1, (i + y + 1));
+	ft_strlcat(newchain, s2, (i + y + 1));
+	free (s1);
 	return (newchain);
 }

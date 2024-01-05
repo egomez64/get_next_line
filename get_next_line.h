@@ -13,17 +13,28 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 # include <unistd.h>
 # include <stdlib.h>
 # include <stddef.h>
 
+struct s_stack
+{
+	char	*stock;
+	char	*buff;
+	char	ateof;
+};
+
 char	*get_next_line(int fd);
-int		ft_strlen(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
-char	*next_stock(int fd, char *stock);
+int		next_stock(int fd, struct s_stack *result);
 char	*clean_stock(char *stock);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 char	*ft_strdup(const char *src);
-
-# endif
+void	free_result(struct s_stack *result);
+int		verif(struct s_stack *result, int fd);
+#endif

@@ -121,13 +121,16 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (stat == 0)
 		return (NULL);
-	if (result.ateof == 1 && result.stock[0] == 0)
+	if (result.ateof == 1 && (result.stock == NULL || result.stock[0] == 0))
 	{
 		free_result(&result);
 		return (NULL);
 	}
 	if (!verif(&result, fd))
+	{
+		free_result(&result);
 		return (NULL);
+	}
 	line = extract_line(&result);
 	clean_stock(result.stock);
 	return (line);

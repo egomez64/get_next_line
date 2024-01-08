@@ -12,6 +12,11 @@
 
 #include "get_next_line.h"
 
+static char	*clean_stock(char *stock);
+static int	verif(struct s_stack *result, int fd);
+static char	*extract_line(struct s_stack *result);
+static int	next_stock(int fd, struct s_stack *result);
+
 static int	verif(struct s_stack *result, int fd)
 {
 	if (result->buff == 0)
@@ -39,7 +44,7 @@ static char	*extract_line(struct s_stack *result)
 	int		i;
 
 	i = 0;
-	while (result->stock[i] != '\n' && result->stock[i] != 0)
+	while (result->stock[i] != 0 && result->stock[i] != '\n')
 		i++;
 	line = malloc(sizeof(char) * i + 2);
 	if (!line)
@@ -68,19 +73,13 @@ static int	next_stock(int fd, struct s_stack *result)
 	{
 		bytes = read(fd, result->buff, BUFFER_SIZE);
 		if (bytes == -1)
-		{
-			free_result(result);
 			return (0);
-		}
 		if (bytes != BUFFER_SIZE)
 			result->ateof = 1;
 		result->buff[bytes] = 0;
 		result->stock = ft_strjoin(result->stock, result->buff);
-		if (!result->stock)
-		{
-			free_result(result);
+		if (result->stock[0] == 0)
 			return (0);
-		}
 	}
 	return (1);
 }
@@ -110,27 +109,26 @@ static char	*clean_stock(char *stock)
 	return (stock);
 }
 
-static char	*get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static struct s_stack	result;
 	char					*line;
+	int						stat;
 
+	stat = 1;
+	line = NULL;
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	if (result.ateof == 1)
+	if (stat == 0)
+		return (NULL);
+	if (result.ateof == 1 && result.stock[0] == 0)
 	{
-		free (result.buff);
-		result.buff = 0;
+		free_result(&result);
 		return (NULL);
 	}
 	if (!verif(&result, fd))
 		return (NULL);
 	line = extract_line(&result);
 	clean_stock(result.stock);
-	if (result.stock[0] == 0)
-	{
-		free (result.stock);
-		result.stock = NULL;
-	}
 	return (line);
 }

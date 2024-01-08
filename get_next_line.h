@@ -31,10 +31,7 @@ struct s_stack
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
-int		next_stock(int fd, struct s_stack *result);
-char	*clean_stock(char *stock);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 char	*ft_strdup(const char *src);
 void	free_result(struct s_stack *result);
-int		verif(struct s_stack *result, int fd);
 #endif

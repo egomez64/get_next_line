@@ -12,16 +12,6 @@
 
 #include "get_next_line.h"
 
-/*int	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}*/
-
 void	free_result(struct s_stack *result)
 {
 	if (result->stock)

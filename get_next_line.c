@@ -113,13 +113,9 @@ char	*get_next_line(int fd)
 {
 	static struct s_stack	result;
 	char					*line;
-	int						stat;
 
-	stat = 1;
 	line = NULL;
 	if (BUFFER_SIZE <= 0 || fd < 0)
-		return (NULL);
-	if (stat == 0)
 		return (NULL);
 	if (result.ateof == 1 && (result.stock == NULL || result.stock[0] == 0))
 	{
